@@ -90,7 +90,7 @@ function App() {
 
       <div className="table-wrapper" id="reportTable">
         <img src="/daslogo.png" height={100} alt="" />
-        <h3 className="subtitle">سیکشن "c" کی رپورٹ:       &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; تاریخ: {today}</h3>
+        <h4 className="subtitle">سیکشن "c" کی رپورٹ:       &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; تاریخ: {today}</h4>
         <table  className="report-table">
           <thead>
             <tr>
