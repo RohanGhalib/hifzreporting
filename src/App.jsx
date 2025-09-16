@@ -12,17 +12,17 @@ function App() {
   // Load students from Firestore
  useEffect(() => {
   const loadCsv = async () => {
-    setLoading(true); // start spinner
-    try {
-      const docRef = doc(db, "data", "students");
-      const snap = await getDoc(docRef);
-      if (snap.exists()) {
-        setStudents(snap.data().names || []);
-      }
-    } finally {
-      setLoading(false); // hide spinner
+  setLoading(true);
+  try {
+    const docRef = doc(db, "data", "students");
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      setStudents(snap.data().names || []);
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
   loadCsv();
 }, []);
 
@@ -51,12 +51,19 @@ function App() {
    const saveCsv = async () => {
   const newNames = csvText.split("\n").map(n => n.trim()).filter(Boolean);
 
-  setStudents(newNames); // optimistic UI
   setEditing(false);
   setLoading(true);
 
   try {
+    // Firestore me overwrite karo
     await setDoc(doc(db, "data", "students"), { names: newNames });
+
+    // save hone ke baad dubara firestore se fresh data fetch karo
+    const snap = await getDoc(doc(db, "data", "students"));
+    if (snap.exists()) {
+      setStudents(snap.data().names || []);
+    }
+
     console.log("Saved ✅");
   } catch (err) {
     alert("Save failed ❌");
@@ -64,6 +71,7 @@ function App() {
     setLoading(false);
   }
 };
+
 
   return (
     <div className="app-container">
