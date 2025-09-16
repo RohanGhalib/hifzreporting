@@ -60,8 +60,8 @@ function App() {
         </div>
       )}
 
-      <div className="table-wrapper">
-        <table id="reportTable" className="report-table">
+      <div className="table-wrapper" id="reportTable">
+        <table  className="report-table">
           <thead>
             <tr>
               <th>#</th>
@@ -101,6 +101,7 @@ function App() {
             ))}
           </tbody>
         </table>
+            نوٹ: ✅ مکمل، ❌ نامکمل، ❗ بہتری کی ضرورت
       </div>
 
       <button onClick={saveAsImage} className="save-btn">
