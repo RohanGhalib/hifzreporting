@@ -52,7 +52,7 @@ function App() {
 
       {editing && (
         <div className="csv-editor">
-          <textarea
+          <textarea className="csv-textarea"
             value={csvText}
             onChange={(e) => setCsvText(e.target.value)}
           ></textarea>
