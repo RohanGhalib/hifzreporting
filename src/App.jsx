@@ -46,7 +46,6 @@ function App() {
 
   return (
     <div className="app-container">
-      <h2 className="title">📖 قرآن اسٹڈی سرکل رپورٹ</h2>
 
       <button className="edit-btn" onClick={openEditor}>✏️ ناموں کی فہرست ترمیم کریں</button>
 
@@ -61,6 +60,8 @@ function App() {
       )}
 
       <div className="table-wrapper" id="reportTable">
+        <img src="/daslogo.png" height={100} alt="" />
+        <h3 className="subtitle">سیکشن "c" کی رپورٹ:</h3>
         <table  className="report-table">
           <thead>
             <tr>
@@ -69,6 +70,9 @@ function App() {
               <th>سبق</th>
               <th>سبقی</th>
               <th>منزل</th>
+              <th>مطالعہ</th>
+              <th>ارقم بک</th>
+
             </tr>
           </thead>
           <tbody>
@@ -86,6 +90,20 @@ function App() {
                 <td>
                   <select className="input">
                    <option>✅</option>
+                    <option>❌</option>
+                    <option>❗</option>
+                  </select>
+                </td>
+                <td>
+                  <select className="input">
+                    <option>✅</option>
+                    <option>❌</option>
+                    <option>❗</option>
+                  </select>
+                </td>
+                <td>
+                  <select className="input">
+                    <option>✅</option>
                     <option>❌</option>
                     <option>❗</option>
                   </select>
