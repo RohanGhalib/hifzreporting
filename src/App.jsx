@@ -4,6 +4,7 @@ import { db } from "./firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function App() {
+  const today = new Date().toISOString().slice(0, 10);
   const [students, setStudents] = useState([]);
   const [editing, setEditing] = useState(false);
   const [csvText, setCsvText] = useState("");
@@ -32,11 +33,10 @@ function App() {
  html2canvas(document.getElementById("reportTable"), {
     backgroundColor: "#ffffff", 
     color: "#000000", // Force black text
-    scale: 2                     // High resolution
+    scale: 4                    // High resolution
 }).then(canvas => {
     let link = document.createElement("a");
-    const today = new Date().toISOString().slice(0, 10);
-    link.download = `hifz-diary-${today}.png`;
+    link.download = `hifz-report-${today}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
 });
@@ -90,7 +90,7 @@ function App() {
 
       <div className="table-wrapper" id="reportTable">
         <img src="/daslogo.png" height={100} alt="" />
-        <h3 className="subtitle">سیکشن "c" کی رپورٹ:</h3>
+        <h3 className="subtitle">سیکشن "c" کی رپورٹ:       &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; تاریخ: {today}</h3>
         <table  className="report-table">
           <thead>
             <tr>
@@ -155,7 +155,7 @@ function App() {
       </div>
 
       <button onClick={saveAsImage} className="save-btn">
-        📥 رپورٹ محفوظ کریں (PNG)
+        📥 Save Report
       </button>
     </div>
   );
