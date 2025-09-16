@@ -1,20 +1,31 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
+import { db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 function App() {
   const [students, setStudents] = useState([]);
   const [editing, setEditing] = useState(false);
   const [csvText, setCsvText] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Load students from CSV
-  useEffect(() => {
-    fetch("/students.csv")
-      .then(res => res.text())
-      .then(text => {
-        const names = text.split("\n").map(line => line.trim()).filter(Boolean);
-        setStudents(names);
-      });
-  }, []);
+  // Load students from Firestore
+ useEffect(() => {
+  const loadCsv = async () => {
+    setLoading(true); // start spinner
+    try {
+      const docRef = doc(db, "data", "students");
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        setStudents(snap.data().names || []);
+      }
+    } finally {
+      setLoading(false); // hide spinner
+    }
+  };
+  loadCsv();
+}, []);
+
 
   // Save PNG
   const saveAsImage = () => {
@@ -37,12 +48,22 @@ function App() {
     setCsvText(students.join("\n"));
   };
 
-  // Save CSV back
-  const saveCsv = () => {
-    const newNames = csvText.split("\n").map(line => line.trim()).filter(Boolean);
-    setStudents(newNames);
-    setEditing(false);
-  };
+   const saveCsv = async () => {
+  const newNames = csvText.split("\n").map(n => n.trim()).filter(Boolean);
+
+  setStudents(newNames); // optimistic UI
+  setEditing(false);
+  setLoading(true);
+
+  try {
+    await setDoc(doc(db, "data", "students"), { names: newNames });
+    console.log("Saved ✅");
+  } catch (err) {
+    alert("Save failed ❌");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="app-container">
@@ -75,7 +96,10 @@ function App() {
 
             </tr>
           </thead>
+          {loading && <div className="loader"></div>}
+
           <tbody>
+
             {students.map((name, index) => (
               <tr key={index} className="fade-in">
                 <td>{index + 1}</td>
