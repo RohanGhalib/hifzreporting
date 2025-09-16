@@ -30,16 +30,43 @@ function App() {
 
   // Save PNG
   const saveAsImage = () => {
- html2canvas(document.getElementById("reportTable"), {
-    backgroundColor: "#ffffff", 
-    color: "#000000", // Force black text
-    scale: 4                    // High resolution
-}).then(canvas => {
-    let link = document.createElement("a");
-    link.download = `hifz-report-${today}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-});
+const reportTable = document.getElementById("reportTable");
+
+  html2canvas(reportTable, {
+    backgroundColor: "#ffffff",
+    scale: 4, // high resolution
+  }).then(async (canvas) => {
+    // Convert canvas to blob
+    canvas.toBlob(async (blob) => {
+      // Create a file from the blob
+      const file = new File([blob], `hifz-report-${today}.png`, { type: "image/png" });
+
+      // Trigger download
+      const link = document.createElement("a");
+      link.download = file.name;
+      link.href = URL.createObjectURL(file);
+      link.click();
+
+      // Try sharing via Web Share API (Android/iOS)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: "Hifz Report",
+            text: "Here is the Hifz report 📄",
+            files: [file],
+          });
+          console.log("Shared successfully");
+        } catch (err) {
+          console.error("Sharing cancelled or failed:", err);
+        }
+      } else {
+        // Fallback: share image as link (desktop)
+        const imageURL = link.href;
+        const whatsappURL = "https://wa.me/?text=" + encodeURIComponent("Check this Hifz report 👇\n" + imageURL);
+        window.open(whatsappURL, "_blank");
+      }
+    });
+  });
   };
 
   // Open CSV editor
